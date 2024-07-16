@@ -7,14 +7,15 @@ import axios from 'axios';
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const backendUrl = 'https://tresurebackend.onrender.com'
 
   useEffect(() => {
     const pageLoad = async () => {
       try {
-        const response = await axios.get("https://tresurebackend.onrender.com/start");
+        const response = await axios.get(backendUrl+"/start");
         console.log(response.status);
 
-        if (response.status === 200) {
+        if (response.status === 201) {
           setIsLoading(false);
           setIsError(false);
         } else {

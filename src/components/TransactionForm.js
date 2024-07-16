@@ -10,10 +10,11 @@ export const TransactionForm = () => {
   const [remark, setRemark] = useState('');
   const [formView, setFormView] = useState(false);
   const [balance, setBalance] = useState(null);
+  const backendUrl = 'https://tresurebackend.onrender.com';
 
   const getBalance = async () => {
     try {
-      const response = await axios.get("https://tresurebackend.onrender.com/start");
+      const response = await axios.get(backendUrl + "/start");
       setBalance(response.data.balance);
     } catch (error) {
       console.error(error);
@@ -24,14 +25,19 @@ export const TransactionForm = () => {
     event.preventDefault();
 
     try {
-      await axios.post("https://tresurebackend.onrender.com/addTransaction", { amount, amountType, remark });
-      setFormView(false);
-      getBalance();
+
+      const password = prompt('enter Password')
+
+      if(password === '2165'){
+        await axios.post(backendUrl + "/addTransaction", { amount, amountType, remark });
+        setFormView(false);
+        getBalance();
+      }
+    
     } catch (error) {
       console.error(error);
     }
 
-    alert(`Amount: ${amount}, Type: ${amountType}, Remark: ${remark}`);
   };
 
   const hideForm = () => {
@@ -44,7 +50,7 @@ export const TransactionForm = () => {
 
   if (formView) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
         <div className="bg-white p-8 rounded-2xl shadow-xl w-[80vw] h-[40vh] relative">
           <div onClick={hideForm} className="absolute right-3 top-2 p-3 text-gray-600 hover:text-red-500 cursor-pointer">
             <ImCross size={20} />
@@ -93,11 +99,11 @@ export const TransactionForm = () => {
   } else {
     return (
       <div>
-        <div onClick={() => setFormView(true)} className="fixed bottom-20 left-4 bg-white p-4 rounded-full shadow-lg cursor-pointer">
-          <IoAddCircle size={40} className="text-red-400" />
+        <div className="fixed bottom-20 left-4 z-10">
+          <IoAddCircle size={40} className="text-red-400 bg-white p-1 rounded-full shadow-lg cursor-pointer" onClick={() => setFormView(true)} />
         </div>
-        <div className="fixed bottom-20 right-4 bg-white p-4 rounded-full shadow-lg cursor-pointer">
-          <h1 className="text-3xl flex items-center gap-2 text-red-400 font-extrabold">
+        <div className="fixed bottom-20 right-4 z-10">
+          <h1 className="text-3xl flex items-center gap-2 text-red-400 font-extrabold bg-white p-4 rounded-full shadow-lg cursor-pointer">
             <GiTakeMyMoney className="text-green-600" />
             {balance}$
           </h1>
